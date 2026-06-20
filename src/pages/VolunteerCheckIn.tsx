@@ -8,8 +8,8 @@ type AidStation = {
 
 const VolunteerCheckIn = () => {
   const [bibNumber, setBibNumber] = useState("");
-  const [aidStations, setAidStations] = useState<AidStation[]>([])
-  const [selectedAidStation, setSelectedAidStation] = useState('')
+  const [aidStations, setAidStations] = useState<AidStation[]>([]);
+  const [selectedAidStation, setSelectedAidStation] = useState('');
   
   useEffect(() => {
     fetch('http://localhost:8080/aid_stations')
