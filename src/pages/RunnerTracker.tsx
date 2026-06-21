@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TextField from "@mui/material/TextField";
-import "/src/App.css";
+import "./runnerTracker.css";
 
 type Runner = {
   runner_name:string;
@@ -15,6 +15,8 @@ const RunnerTracker = () => {
   const [runner, setRunner] = useState<Runner[]>([]);
   const [inputText, setInputText] = useState("");
 
+  const elapsedTime = "00:00:00";
+
   useEffect(() => {
     fetch('http://localhost:8080/runners/search/leaderboard')
     .then(response => response.json())
@@ -27,6 +29,7 @@ const RunnerTracker = () => {
   }
 
   const handleSearch = async () => {
+    setRunner([]);
     const isBib = !isNaN(Number(inputText));
     const response = await axios.get('http://localhost:8080/runners/search', {
       params: isBib 
@@ -38,8 +41,19 @@ const RunnerTracker = () => {
   }
 
   return(
-    <div>
+    <>
       <div className="main">
+        <div className="header-top">
+          <div>
+            <p className="race-label">Olympic Mountain 100k</p>
+            <p className="header-title">Live leaderboard</p>
+          </div>
+          <div className="race-clock">
+            <p className="race-label">Race clock</p>
+            <p className="clock-time">{elapsedTime}</p>
+          </div>
+        </div>
+
         <div className="search">
           <TextField
             id="outlined-basic"
@@ -47,39 +61,50 @@ const RunnerTracker = () => {
             onChange={inputHandler}
             value={inputText}
             onKeyDown={(e) => {
-              if(e.key === "Enter"){
+              if (e.key === "Enter") {
                 handleSearch();
-                }
+              }
             }}
             fullWidth
-            label="Search"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#B5502E',
+                },
+              },
+              '& .MuiInputLabel-root': {
+                color: '#F2EFE6',
+              },
+            }}
+            label="Search bib number or name"
           />
           <button onClick={handleSearch}>Search</button>
         </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Runner</th>
-            <th>Bib Number</th>
-            <th>Mile Marker</th>
-            <th>Aid Station</th>
-            <th>Checked In</th>
-          </tr>
-        </thead>
-        <tbody>
-          {runner.map((r) => (
-            <tr key={r.bib_number}>
-              <td>{r.runner_name}</td>
-              <td>{r.bib_number}</td>
-              <td>{r.mile_marker}</td>
-              <td>{r.aid_station_name}</td>
-              <td>{new Date(r.checked_in_at).toLocaleTimeString("en-US")}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <div className="leaderboard">
+        {runner.map((r) => (
+          <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
+            <div className="runner-card-top">
+              <span className="bib">#{r.bib_number}</span>
+              <span className="runner-name">{r.runner_name}</span>
+              <span className="checkin-info">
+                {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station_name}
+              </span>
+            </div>
+            <div className="progress-track">
+              <div
+                className="progress-fill"
+                style={{ width: `${(r.mile_marker ?? 0 / 62) * 100}%` }}
+              />
+            </div>
+            <div className="progress-labels">
+              <span>mi {r.mile_marker ?? 0}</span>
+              <span>62.0</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   )
 }
 
