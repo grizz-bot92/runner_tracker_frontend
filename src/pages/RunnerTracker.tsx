@@ -11,11 +11,39 @@ type Runner = {
   checked_in_at: string;
 }
 
+const startTime = new Date('2026-08-15T05:00:00');
+
 const RunnerTracker = () => {
   const [runner, setRunner] = useState<Runner[]>([]);
   const [inputText, setInputText] = useState("");
+  const [time, setTime] = useState(0);
 
-  const elapsedTime = "00:00:00";
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const elapsed = Date.now() - startTime.getTime();
+      setTime(elapsed);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  function formatTime():string {
+    const absTime = Math.abs(time);
+    const totalSeconds = Math.floor(absTime / 1000);
+    const totalHours = Math.floor(totalSeconds / 3600);
+    const totalMinutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (time < 0) {
+      return `Race starts in ${padZero(totalHours)}:${padZero(totalMinutes)}:${padZero(seconds)}`;
+    }
+
+    return `${padZero(totalHours)}:${padZero(totalMinutes)}:${padZero(seconds)}`;
+  }
+
+  function padZero(number:number){
+    return (number < 10 ? "0" : "") + number;
+  }
 
   useEffect(() => {
     fetch('http://localhost:8080/runners/search/leaderboard')
@@ -23,8 +51,18 @@ const RunnerTracker = () => {
     .then(data => setRunner(data.runner));
   }, []);
 
+  function fetchLeaderBoard(){
+    return fetch('http://localhost:8080/runners/search/leaderboard')
+    .then(response => response.json())
+    .then(data => setRunner(data.runner))
+  }
+
   const inputHandler = (e : React.ChangeEvent<HTMLInputElement>)  => {
     const value = e.target.value;
+    if(value === ""){
+      fetchLeaderBoard();
+    }
+
     setInputText(value);
   }
 
@@ -50,7 +88,7 @@ const RunnerTracker = () => {
           </div>
           <div className="race-clock">
             <p className="race-label">Race clock</p>
-            <p className="clock-time">{elapsedTime}</p>
+            <p className="clock-time">{formatTime()}</p>
           </div>
         </div>
 
@@ -75,6 +113,9 @@ const RunnerTracker = () => {
               '& .MuiInputLabel-root': {
                 color: '#F2EFE6',
               },
+              '& .MuiOutlinedInput-input': {
+                color: '#F2EFE6',
+              },
             }}
             label="Search bib number or name"
           />
@@ -88,13 +129,13 @@ const RunnerTracker = () => {
               <span className="bib">#{r.bib_number}</span>
               <span className="runner-name">{r.runner_name}</span>
               <span className="checkin-info">
-                {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station_name}
+                {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station_name ?? "Start/Finish"}
               </span>
             </div>
             <div className="progress-track">
               <div
                 className="progress-fill"
-                style={{ width: `${(r.mile_marker ?? 0 / 62) * 100}%` }}
+                style={{ width: `${((r.mile_marker ?? 0) / 62) * 100}%` }}
               />
             </div>
             <div className="progress-labels">

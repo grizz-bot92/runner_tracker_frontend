@@ -101,7 +101,7 @@
 
 .race-label {
   color: #C9A876;
-  font-size: 11px;
+  font-size: 20px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin: 0 0 4px;
@@ -109,7 +109,7 @@
 
 .header-title {
   color: #F2EFE6;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 500;
   margin: 0;
 }
@@ -120,7 +120,7 @@
 
 .clock-time {
   color: #F2EFE6;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 500;
   margin: 0;
   font-family: monospace;
