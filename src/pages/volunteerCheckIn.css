@@ -1,0 +1,94 @@
+.checkin-container {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.Header {
+  background-color: #1B2D1F;
+  padding: 1.25rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+}
+
+.Header h1 {
+  color: #F2EFE6;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.aid-station {
+  background: #F2EFE6;
+  padding: 1.5rem 1.5rem 0;
+}
+
+.aid-station select {
+  width: 100%;
+  height: 44px;
+  border: 0.5px solid #DDD8C7;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 15px;
+  background: #fff;
+  box-sizing: border-box;
+  appearance: none;
+}
+
+.bib-number {
+  background: #F2EFE6;
+  padding: 1.25rem 1.5rem 0;
+}
+
+.bib-number input {
+  width: 100%;
+  height: 56px;
+  border: 0.5px solid #B5502E;
+  border-radius: 6px;
+  padding: 0 14px;
+  font-size: 22px;
+  font-family: monospace;
+  box-sizing: border-box;
+}
+
+.submitBtn {
+  background: #F2EFE6;
+  padding: 1.25rem 1.5rem 1.5rem;
+  border-radius: 0 0 8px 8px;
+}
+
+.submitBtn button {
+  width: 100%;
+  background: #B5502E;
+  color: #F2EFE6;
+  border: none;
+  border-radius: 6px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.lastCheckedIn {
+  padding: 0 1.5rem 1.5rem;
+  background: #F2EFE6;
+  border-radius: 0 0 8px 8px;
+}
+
+.checkin-card {
+  background: #fff;
+  border-radius: 6px;
+  border-left: 3px solid #B5502E;
+  padding: 12px 14px;
+}
+
+.checkin-label {
+  font-size: 12px;
+  color: #8a8a82;
+  margin: 0 0 2px;
+}
+
+.checkin-detail {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2A2A28;
+  margin: 0;
+}
