@@ -8,7 +8,7 @@ type AidStation = {
 }
 
 type Runner = {
-  runner_name: string,
+  runner_name: string;
   aid_station_name: string;
   checked_in_at: string; 
 }
@@ -69,7 +69,7 @@ const VolunteerCheckIn = () => {
         <input name="bibNumber" type="text" inputMode="numeric" value={bibNumber} onChange= {handleChange} />
       </div>
       <div className="submitBtn">
-        <button onClick={handleClick}> Submit</button>
+        <button onClick={handleClick}>Submit</button>
       </div>
       <div className="lastCheckedIn">
         {lastCheckIn && (

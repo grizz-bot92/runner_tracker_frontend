@@ -1,0 +1,105 @@
+.page {
+  background-color: #F2EFE6;
+}
+
+.header-top {
+  background-color: #1B2D1F;
+  padding: 3.25rem 1.5rem;
+  display:flex;
+  flex-direction:column;
+}
+
+.race-label {
+  color: #C9A876;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+}
+
+.header-title {
+  color: #F2EFE6;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+  padding-top:14px;
+}
+
+.director-content {
+  padding: 1.5rem;
+}
+
+.race-details,
+.runner-details,
+.aid-station-details {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.race-details p,
+.runner-details p,
+.aid-station-details p {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2A2A28;
+  margin: 0 0 12px;
+}
+
+.saveBtn,
+.addBtn {
+  margin-top: 8px;
+}
+
+.saveBtn button,
+.addBtn button
+{
+  background: #B5502E;
+  color: #F2EFE6;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.addRunnerBtn {
+  margin-top: 8px;
+}
+
+.addRunnerBtn button {
+  background: #B5502E;
+  color: #F2EFE6;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.MuiTabs-root {
+  min-height: 40px;
+}
+
+.MuiTab-root {
+  color: #C9A876 !important;
+  font-size: 13px !important;
+  text-transform: none !important;
+  opacity: 0.7;
+}
+
+.MuiTab-root.Mui-selected {
+  color: #1B2D1F !important;
+  opacity: 1;
+}
+
+.MuiTabs-indicator {
+  background-color: #B5502E !important;
+}
+
+.MuiTabPanel-root {
+  padding: 1.5rem 0 0 !important;
+}
