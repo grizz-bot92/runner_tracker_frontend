@@ -2,7 +2,7 @@
   background-color: #F2EFE6;
 }
 
-.header-top {
+.header-top-race {
   background-color: #1B2D1F;
   padding: 3.25rem 1.5rem;
   display:flex;
@@ -31,7 +31,8 @@
 
 .race-details,
 .runner-details,
-.aid-station-details {
+.aid-station-details,
+.added-runners-div {
   background: #fff;
   border-radius: 8px;
   padding: 1.25rem;
@@ -79,6 +80,7 @@
   font-weight: 500;
   cursor: pointer;
 }
+
 
 .MuiTabs-root {
   min-height: 40px;
