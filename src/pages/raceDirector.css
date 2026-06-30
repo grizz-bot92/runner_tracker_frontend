@@ -39,15 +39,6 @@
   margin-bottom: 1rem;
 }
 
-.race-details p,
-.runner-details p,
-.aid-station-details p {
-  font-size: 13px;
-  font-weight: 500;
-  color: #2A2A28;
-  margin: 0 0 12px;
-}
-
 .saveBtn,
 .addBtn {
   margin-top: 8px;
@@ -62,12 +53,22 @@
   border-radius: 6px;
   padding: 8px 18px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: bold;
   cursor: pointer;
 }
 
+.entered-runner > * {
+  flex: 1;
+}
+
 .addRunnerBtn {
-  margin-top: 8px;
+  flex: 0 0 auto;
+}
+
+.entered-runner{
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .addRunnerBtn button {
@@ -77,10 +78,51 @@
   border-radius: 6px;
   padding: 8px 18px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: bold;
   cursor: pointer;
 }
 
+.added-runners-div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 1rem;
+}
+
+.registered-runner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background-color: #F2EFE6;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.runner-info{
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.runner-name{
+  font-size: 13px;
+}
+
+.rd-header{
+  padding: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #2A2A28;
+  margin: 0 0 12px;
+}
 
 .MuiTabs-root {
   min-height: 40px;

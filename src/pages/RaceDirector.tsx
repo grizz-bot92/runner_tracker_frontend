@@ -12,6 +12,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import { FiEdit } from "react-icons/fi";
 import "./raceDirector.css";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 type Race = {
   name: string;
@@ -26,6 +27,7 @@ type Race = {
 }
 
 type Runner = {
+  id: number,
   name: string;
   bib_number: number;
 }
@@ -43,12 +45,11 @@ type AidStation = {
 const RaceDirector = () => {
   const [race, setRace] = useState<Race[]>([]);
   const [runner, setRunner] = useState<Runner[]>([]);
-  const [aidStation, setAidStations] = useState<AidStation[]>([]);
+  const [aidStation, setAidStation] = useState<AidStation[]>([]);
+  const [runnerName, setRunnerName] = useState('');
+  const [bibNumber, setBibNumber] = useState('');
   const [value, setValue] = useState('1');
 
-  const handleChange = (event: React.SyntheticEvent, newValue : string) => {
-    setValue(newValue);
-  };  
   
   useEffect(() => {
     fetch('http://localhost:8080/races')
@@ -61,6 +62,55 @@ const RaceDirector = () => {
     .then(response => response.json())
     .then(data => setRunner(data.runner))
   }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/aid_stations')
+    .then(response => response.json())
+    .then(data => setAidStation(data.aid_station))
+  }, []);
+
+  const addRunner = async () => {
+    const result = await axios.post('http://localhost:8080/runners', {
+      name: runnerName,
+      bib_number: parseInt(bibNumber),
+    });
+    setRunner([...runner, result.data.runner])
+  }
+
+  const deleteRunner = async (id: number) => {
+    await axios.delete('http://localhost:8080/runners/${id}');
+    setRunner(runner.filter((r) => r.id !== id));
+  }
+
+  const handleChange = (event: React.SyntheticEvent, newValue : string) => {
+    setValue(newValue);
+  };
+  
+  const handleNameChange = (e : React.ChangeEvent<HTMLSelectElement>) => {
+    setRunnerName(e.target.value);
+  }
+
+  const handleBibChange = (e : React.ChangeEvent<HTMLSelectElement>) => {
+    setBibNumber(e.target.value);
+  }
+
+  const textStyleField = {
+    '& .MuiFilledInput-root': {
+      borderRadius: '10px',
+    },
+    '& .MuiFilledInput-underline:before': {
+      borderBottom: 'none',
+    },
+    '& .MuiFilledInput-underline:after': {                      
+      borderBottom: 'none',
+    },
+    '& .MuiFilledInput-underline:hover:before': {
+      borderBottom: 'none',
+    },
+    '& .MuiFilledInput-underline:hover:after':{
+      borderBottom: 'none',
+    },
+  }
 
   return(
     <div className="page">
@@ -83,17 +133,17 @@ const RaceDirector = () => {
 
           <TabPanel value="1">
             <div className="race-details">
-              <p>Race details</p>
+              <p className='rd-header'>Race details</p>
               <Box
                   component="form"
                   sx={{ '& > :not(style)' : {m: 1, width: '25ch'} }}
                   noValidate
                   autoComplete="off"
                 >
-                  <TextField id="race-name" label="Race Name" variant="filled"/>
-                  <TextField id="race-date" label="Date" variant="filled"/>
-                  <TextField id="race-distance" label="Distance" variant="filled"/>
-                  <TextField id="race-cutoff" label="Cutoff" variant="filled"/>
+                  <TextField id="race-name" label="Race Name" variant="filled" sx={textStyleField}/>
+                  <TextField id="race-date" label="Date" variant="filled" sx={textStyleField}/>
+                  <TextField id="race-distance" label="Distance" variant="filled" sx={textStyleField}/>
+                  <TextField id="race-cutoff" label="Cutoff" variant="filled" sx={textStyleField}/>
                   <div className="saveBtn">
                     <button>Save changes</button>
                   </div>
@@ -103,30 +153,46 @@ const RaceDirector = () => {
             
               <TabPanel value="2">
                 <div className="runner-details">
-                  <p>Runners · 3 registered </p>
+                  <p className='rd-header'>Runners · 3 registered </p>
                   <Box
                     component="form"
-                    sx={{ '& > : not(style)' : {m: 1, width: '25ch'} }}
+                    sx={{ '& > :not(style)' : {m: 1, width: '25ch'} }}
                     noValidate
                     autoComplete="off"
                   >
-                    <TextField id="runner-name" label="Name" variant="filled"/>
-                    <TextField id="runner-number" label="Number" variant="filled"/>
+                    <TextField 
+                      id="runner-name" 
+                      label="Name" 
+                      variant="filled"
+                      onChange={handleNameChange}
+                      value={runnerName}
+                      sx={textStyleField}    
+                      />
+                    <TextField 
+                      id="runner-number" 
+                      label="Number" 
+                      variant="filled"
+                      onChange={handleBibChange}
+                      value={bibNumber}
+                      sx={textStyleField}
+                      />
+                        
                     <div className="addRunnerBtn">
-                      <button>Add runner</button>
+                      <button onClick={addRunner}>Add runner</button>
                     </div>
                   </Box>
                 </div>
+
                 <div className="added-runners-div">
                     {runner.map((r) => (
-                      <div className='runner-card'>
+                      <div className='registered-runner' key={r.id}>
                         <div className='runner-info'>
-                          <span className='bib_number'>#{r.bib_number}</span>
+                          <span className='bib_number' style={{color: '#B5502E'}}>#{r.bib_number}</span>
                           <span className='runner-name'>{r.name}</span>
                         </div>
                         <div className='buttons'>
-                          <button className='editBtn'><FiEdit /></button>
-                          
+                          <FiEdit className='editBtn' style={{ color: '#B5502E', fontSize: '18px'}} />
+                          <RiDeleteBinLine className='delBtn' style={{ color: '#B5502E', fontSize: '20px' }}/>
                         </div>
                       </div>
                     ))}
@@ -135,15 +201,27 @@ const RaceDirector = () => {
 
             <TabPanel value="3">
                 <div className="aid-station-details">
-                <p>Add Aid Station</p>
+                <p className='rd-header'>Add Aid Station</p>
                 <Box
                     component="form"
                     sx={{ '& > :not(style)' : {m: 1, width: '25ch'} }}
                     noValidate
                     autoComplete="off"
                   >
-                    <TextField id="aid-station-name" label="Name" variant="filled"/>
-                    <TextField id="mile-marker" label="Mile marker" variant="filled"/> 
+                    <TextField 
+                      id="aid-station-name" 
+                      label="Name" 
+                      variant="filled"
+                      sx={textStyleField}
+                    />
+                    
+                    <TextField 
+                      id="mile-marker" 
+                      label="Mile marker" 
+                      variant="filled"
+                      sx={textStyleField}  
+                    /> 
+                    
                     <div className="addBtn">
                       <button>Add</button>
                     </div>
