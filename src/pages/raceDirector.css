@@ -32,7 +32,9 @@
 .race-details,
 .runner-details,
 .aid-station-details,
-.added-runners-div {
+.added-runners-div,
+.added-aid-station
+ {
   background: #fff;
   border-radius: 8px;
   padding: 1.25rem;
@@ -82,14 +84,16 @@
   cursor: pointer;
 }
 
-.added-runners-div {
+.added-runners-div,
+.added-aid-station {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-top: 1rem;
 }
 
-.registered-runner {
+.registered-runner,
+.aid-station-div {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -104,7 +108,8 @@
   cursor: pointer;
 }
 
-.runner-info{
+.runner-info,
+.aid-station-info{
   font-family: monospace;
   display: flex;
   align-items: center;
@@ -112,16 +117,38 @@
   font-size: 15px;
 }
 
-.runner-name{
-  font-size: 13px;
+.runner-name,
+.aid-station-name{
+  font-size: 15px;
 }
 
-.rd-header{
-  padding: 10px;
-  font-size: 13px;
-  font-weight: bold;
+.rd-header,
+.aid-header{
+  font-weight: 650;
   color: #2A2A28;
-  margin: 0 0 12px;
+}
+
+.aid-header{
+  padding-left: 10px;
+  font-size: 15px;
+}
+
+.runner-count,
+.aid-count {
+  font-family: monospace;
+  color: #C9A876;
+  padding-left:4px;
+}
+
+.registered-header {
+  padding-left: 10px;
+  display: flex;
+  font-size: 15px;
+}
+
+.aid-station-header{
+  display:flex;
+  font-size: 15px;
 }
 
 .MuiTabs-root {
@@ -147,3 +174,5 @@
 .MuiTabPanel-root {
   padding: 1.5rem 0 0 !important;
 }
+
+

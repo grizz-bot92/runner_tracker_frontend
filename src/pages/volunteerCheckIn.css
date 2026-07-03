@@ -1,4 +1,5 @@
 .checkin-container {
+  border: 10px #1B2D1F;
   max-width: 480px;
   margin: 0 auto;
 }
