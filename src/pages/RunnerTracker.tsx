@@ -7,7 +7,7 @@ type Runner = {
   runner_name:string;
   bib_number:number;
   mile_marker: number;
-  aid_station_name: string;
+  aid_station: string;
   checked_in_at: string;
 }
 
@@ -79,7 +79,7 @@ const RunnerTracker = () => {
   }
 
   return(
-    <>
+    <div>
       <div className="main">
         <div className="header-top">
           <div>
@@ -122,31 +122,36 @@ const RunnerTracker = () => {
           <button onClick={handleSearch}>Search</button>
         </div>
       </div>
-      <div className="leaderboard">
-        {runner.map((r) => (
-          <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
-            <div className="runner-card-top">
-              <span className="bib">#{r.bib_number}</span>
-              <span className="runner-name">{r.runner_name}</span>
-              <span className="checkin-info">
-                {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station_name ?? "Start/Finish"}
-              </span>
+      {inputText === '' ? (
+        <div className="leaderboard">
+          {runner.map((r) => (
+            <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
+              <div className="runner-card-top">
+                <span className="bib">#{r.bib_number}</span>
+                <span className="runner-name">{r.runner_name}</span>
+                <span className="checkin-info">
+                  {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
+                </span>
+              </div>
+              <div className="progress-track">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${((r.mile_marker ?? 0) / 62) * 100}%` }}
+                />
+              </div>
+              <div className="progress-labels">
+                <span>mi {r.mile_marker ?? 0}</span>
+                <span>62.0</span>
+              </div>
             </div>
-            <div className="progress-track">
-              <div
-                className="progress-fill"
-                style={{ width: `${((r.mile_marker ?? 0) / 62) * 100}%` }}
-              />
-            </div>
-            <div className="progress-labels">
-              <span>mi {r.mile_marker ?? 0}</span>
-              <span>62.0</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </>
-  )
-}
+          ))}
+        </div>
+      ) : (
+        <div className='leaderboard-search'>
+          
+        </div>
+      )}
+    </div>
+  )}
 
 export default RunnerTracker;

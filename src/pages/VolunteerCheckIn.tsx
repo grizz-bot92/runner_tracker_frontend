@@ -22,7 +22,12 @@ const VolunteerCheckIn = () => {
   useEffect(() => {
     fetch('http://localhost:8080/aid_stations')
     .then(response => response.json())
-    .then(data => setAidStations(data.aid_station));
+    .then(data => {
+      setAidStations(data.aid_station)
+      if(data.aid_station.length > 0){
+        setSelectedAidStation(data.aid_station[0].id.toString());
+      }
+    });
   }, []);
 
   const handleClick = async () => {
