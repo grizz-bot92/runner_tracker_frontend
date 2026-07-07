@@ -147,8 +147,49 @@ const RunnerTracker = () => {
           ))}
         </div>
       ) : (
-        <div className='leaderboard-search'>
-          
+        <div className="leaderboard-search">
+          {runner.length > 0 && (
+            <>
+              <div className="runner-summary-card">
+                <div className="runner-card-top">
+                  <span className="bib">#{runner[runner.length - 1].bib_number}</span>
+                  <span className="runner-name">{runner[runner.length - 1].runner_name}</span>
+                  <span className="checkin-info">
+                    Last seen: {runner[runner.length - 1].aid_station ?? "Start/Finish"} · mi {runner[runner.length - 1].mile_marker ?? 0}
+                  </span>
+                </div>
+                <div className="progress-track">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${((runner[runner.length - 1].mile_marker ?? 0) / 62) * 100}%` }}
+                  />
+                </div>
+                <div className="progress-labels">
+                  <span>mi {runner[runner.length - 1].mile_marker ?? 0}</span>
+                  <span>62.0</span>
+                </div>
+              </div>
+
+              <p className="journey-label">Journey</p>
+
+              <div className="timeline">
+                {runner.map((r, index) => (
+                  <div className="timeline-stop" key={`${r.bib_number}-${r.checked_in_at}`}>
+                    <div className="timeline-connector">
+                      <div className="timeline-dot" />
+                      {index < runner.length - 1 && <div className="timeline-line" />}
+                    </div>
+                    <div className="timeline-content">
+                      <p className="timeline-station">{r.aid_station ?? "Start/Finish"}</p>
+                      <p className="timeline-time">
+                        {new Date(r.checked_in_at).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })} · mi {r.mile_marker ?? 0}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

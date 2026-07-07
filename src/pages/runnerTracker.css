@@ -141,3 +141,76 @@
   font-weight: 500;
   cursor: pointer;
 }
+
+.leaderboard-search {
+  padding: 1.5rem;
+}
+
+.runner-summary-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 1.5rem;
+}
+
+.journey-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #8a8a82;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 8px;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-stop {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.timeline-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #B5502E;
+  flex-shrink: 0;
+}
+
+.timeline-line {
+  width: 2px;
+  flex: 1;
+  background: #DDD8C7;
+  min-height: 32px;
+}
+
+.timeline-content {
+  padding-bottom: 16px;
+  flex: 1;
+}
+
+.timeline-station {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2A2A28;
+  margin: 0 0 2px;
+}
+
+.timeline-time {
+  font-size: 12px;
+  color: #8a8a82;
+  margin: 0;
+}
