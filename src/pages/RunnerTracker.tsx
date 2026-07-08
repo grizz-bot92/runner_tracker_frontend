@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TextField from "@mui/material/TextField";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import Rating from '@mui/material/Rating';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import Typography from '@mui/material/Typography';
 import "./runnerTracker.css";
 
 type Runner = {
@@ -17,6 +28,11 @@ const RunnerTracker = () => {
   const [runner, setRunner] = useState<Runner[]>([]);
   const [inputText, setInputText] = useState("");
   const [time, setTime] = useState(0);
+  const [value, setValue] = useState('1');
+  const [watchList, setWatchList] = useState<number[]>(() => {
+    const localData = localStorage.getItem('Watchlist');
+    return localData ? JSON.parse(localData) : [];
+  });
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -66,7 +82,7 @@ const RunnerTracker = () => {
     setInputText(value);
   }
 
-  const handleSearch = async () => {
+  const handleSearch = async() => {
     setRunner([]);
     const isBib = !isNaN(Number(inputText));
     const response = await axios.get('http://localhost:8080/runners/search', {
@@ -78,6 +94,31 @@ const RunnerTracker = () => {
     setRunner(response.data.runner);
   }
 
+  const handleChange = (event: React.SyntheticEvent, newValue : string) => {
+    setValue(newValue);
+  }
+
+  const watchedRunners = runner.filter((r) => watchList.includes(r.bib_number));
+
+  const toggleWatch = async(bib_number: number) => {
+    const toggled = watchList.includes(bib_number) 
+    ? watchList.filter(b => b != bib_number)
+    : [...watchList, bib_number];
+    
+    setWatchList(toggled);
+    localStorage.setItem('watchlist', JSON.stringify(toggled));
+  }
+
+  const StyledRating = styled(Rating)({
+    '& .MuiRating-iconFilled': {
+      color: '#8a8a82',
+    },
+    '& .MuiRating-iconHover': {
+      color: '#8a8a82'
+    },
+  });
+
+  
   return(
     <div>
       <div className="main">
@@ -122,77 +163,158 @@ const RunnerTracker = () => {
           <button onClick={handleSearch}>Search</button>
         </div>
       </div>
-      {inputText === '' ? (
-        <div className="leaderboard">
-          {runner.map((r) => (
-            <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
-              <div className="runner-card-top">
-                <span className="bib">#{r.bib_number}</span>
-                <span className="runner-name">{r.runner_name}</span>
-                <span className="checkin-info">
-                  {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
-                </span>
-              </div>
-              <div className="progress-track">
-                <div
-                  className="progress-fill"
-                  style={{ width: `${((r.mile_marker ?? 0) / 62) * 100}%` }}
-                />
-              </div>
-              <div className="progress-labels">
-                <span>mi {r.mile_marker ?? 0}</span>
-                <span>62.0</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="leaderboard-search">
-          {runner.length > 0 && (
-            <>
-              <div className="runner-summary-card">
+      
+      <div className='director-content'>
+        <Box sx={{ width: '100%', typography: 'body1' }}>
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <TabList onChange={handleChange}>
+                <Tab label='Leaderboard' value='1'/>
+                <Tab label='Watchlist' value='2'/>
+                <Tab label='DNF/DNS' value='3'/>
+              </TabList>
+        </Box>
+      
+      <TabPanel value='1'>
+        {inputText === '' ? (
+          <div className="leaderboard">
+            {runner.map((r) => (
+              <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
+                <div className='favorited-runner'>
+                  <Box sx={{ '& > legend': {mt: 2}}}>
+                    <Typography component='legend'></Typography>
+                    <StyledRating 
+                      name='favorited' 
+                      max={1} 
+                      value={watchList.includes(r.bib_number) ? 1 : 0}
+                      onChange={() => toggleWatch(r.bib_number)}
+                      />
+                  </Box>
+                </div>
                 <div className="runner-card-top">
-                  <span className="bib">#{runner[runner.length - 1].bib_number}</span>
-                  <span className="runner-name">{runner[runner.length - 1].runner_name}</span>
+                  <span className="bib">#{r.bib_number}</span>
+                  <span className="runner-name">{r.runner_name}</span>
                   <span className="checkin-info">
-                    Last seen: {runner[runner.length - 1].aid_station ?? "Start/Finish"} · mi {runner[runner.length - 1].mile_marker ?? 0}
+                    {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
                   </span>
                 </div>
                 <div className="progress-track">
                   <div
                     className="progress-fill"
-                    style={{ width: `${((runner[runner.length - 1].mile_marker ?? 0) / 62) * 100}%` }}
+                    style={{ width: `${((r.mile_marker ?? 0) / 62) * 100}%` }}
                   />
                 </div>
                 <div className="progress-labels">
-                  <span>mi {runner[runner.length - 1].mile_marker ?? 0}</span>
+                  <span>mi {r.mile_marker ?? 0}</span>
                   <span>62.0</span>
                 </div>
               </div>
-
-              <p className="journey-label">Journey</p>
-
-              <div className="timeline">
-                {runner.map((r, index) => (
-                  <div className="timeline-stop" key={`${r.bib_number}-${r.checked_in_at}`}>
-                    <div className="timeline-connector">
-                      <div className="timeline-dot" />
-                      {index < runner.length - 1 && <div className="timeline-line" />}
-                    </div>
-                    <div className="timeline-content">
-                      <p className="timeline-station">{r.aid_station ?? "Start/Finish"}</p>
-                      <p className="timeline-time">
-                        {new Date(r.checked_in_at).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })} · mi {r.mile_marker ?? 0}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+            ))}
+            {runner.map((r) => (
+              <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
+                <div className="runner-card-top">
+                  <span className="bib">#{r.bib_number}</span>
+                  <span className="runner-name">{r.runner_name}</span>
+                  <span className="checkin-info">
+                    {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
+                  </span>
+                </div>
+                <div className="progress-track">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${((r.mile_marker ?? 0) / 62) * 100}%` }}
+                  />
+                </div>
+                <div className="progress-labels">
+                  <span>mi {r.mile_marker ?? 0}</span>
+                  <span>62.0</span>
+                </div>
               </div>
-            </>
+            ))}
+          </div>
+        ) : (
+          <div className="leaderboard-search">
+            {runner.length > 0 && (
+              <>
+                <div className="runner-summary-card">
+                  <div className="runner-card-top">
+                    <span className="bib">#{runner[runner.length - 1].bib_number}</span>
+                    <span className="runner-name">{runner[runner.length - 1].runner_name}</span>
+                    <span className="checkin-info">
+                      Last seen: {runner[runner.length - 1].aid_station ?? "Start/Finish"} · mi {runner[runner.length - 1].mile_marker ?? 0}
+                    </span>
+                  </div>
+                  <div className="progress-track">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${((runner[runner.length - 1].mile_marker ?? 0) / 62) * 100}%` }}
+                    />
+                  </div>
+                  <div className="progress-labels">
+                    <span>mi {runner[runner.length - 1].mile_marker ?? 0}</span>
+                    <span>62.0</span>
+                  </div>
+                </div>
+
+                <p className="journey-label">Journey</p>
+
+                <div className="timeline">
+                  {runner.map((r, index) => (
+                    <div className="timeline-stop" key={`${r.bib_number}-${r.checked_in_at}`}>
+                      <div className="timeline-connector">
+                        <div className="timeline-dot" />
+                        {index < runner.length - 1 && <div className="timeline-line" />}
+                      </div>
+                      <div className="timeline-content">
+                        <p className="timeline-station">{r.aid_station ?? "Start/Finish"}</p>
+                        <p className="timeline-time">
+                          {new Date(r.checked_in_at).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })} · mi {r.mile_marker ?? 0}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+        </TabPanel>
+        <TabPanel value='2'>
+          <div> 
+            {watchedRunners.map((r) => (
+              <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
+                <div className="runner-card-top">
+                  <span className="bib">#{r.bib_number}</span>
+                  <span className="runner-name">{r.runner_name}</span>
+                  <span className="checkin-info">
+                    {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
+                  </span>
+                </div>
+                <div className="progress-track">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${((r.mile_marker ?? 0) / 62) * 100}%` }}
+                  />
+                </div>
+                <div className="progress-labels">
+                  <span>mi {r.mile_marker ?? 0}</span>
+                  <span>62.0</span>
+                </div>
+              </div>
+            ) 
           )}
-        </div>
-      )}
+          </div>
+        </TabPanel>
+
+        <TabPanel value='3'>
+          <p>DNF/DNS coming soon</p>
+        </TabPanel>
+
+        </TabContext>
+        </Box>
+      </div>
     </div>
   )}
+
 
 export default RunnerTracker;

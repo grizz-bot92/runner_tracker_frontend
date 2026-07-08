@@ -339,15 +339,6 @@ const RaceDirector = () => {
                       value={mileMarker}
                       sx={textStyleField}  
                     />
-
-                    {/* <TextField
-                      id="cutoff-time"
-                      label="Cutoff Time"
-                      variant="filled"
-                      onChange={handleAidCutoff}
-                      value={aidCutoff}
-                      sx={textStyleField}
-                    /> */}
                     
                     <div className="addBtn">
                       <button type='button' onClick={addAidStation}>Add</button>

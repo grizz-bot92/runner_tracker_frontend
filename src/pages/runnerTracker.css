@@ -9,6 +9,10 @@
   max-width: 600px;
 }
 
+.director-content {
+  padding: 1.5rem;
+}
+
 .search button {
   background: #B5502E;
   color: #F2EFE6;
@@ -30,18 +34,27 @@
   background: #fff;
   border-radius: 8px;
   padding: 14px 16px;
+  position: relative;
+}
+
+.favorited-runner{
+  position: absolute; 
+  top: -8px;
+  bottom: 10px;
+  left: 12px;
 }
 
 .runner-card-top {
   display: flex;
   align-items: baseline;
+  padding-top: 25px;
   gap: 10px;
   margin-bottom: 8px;
 }
 
 .bib {
   font-family: monospace;
-  font-size: 12px;
+  font-size: 15px;
   color: #B5502E;
   font-weight: 500;
 }
@@ -50,6 +63,10 @@
   font-size: 15px;
   font-weight: 500;
   flex: 1;
+}
+.runner-select{
+  display: flex;
+  flex-direction: column;
 }
 
 .checkin-info {
