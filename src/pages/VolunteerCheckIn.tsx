@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./volunteerCheckIn.css";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 type AidStation = {
   id:number;
@@ -10,7 +16,8 @@ type AidStation = {
 type Runner = {
   runner_name: string;
   aid_station_name: string;
-  checked_in_at: string; 
+  checked_in_at: string;
+  status: string; 
 }
 
 const VolunteerCheckIn = () => {
@@ -18,6 +25,8 @@ const VolunteerCheckIn = () => {
   const [aidStations, setAidStations] = useState<AidStation[]>([]);
   const [selectedAidStation, setSelectedAidStation] = useState('');
   const [lastCheckIn, setCheckIn] = useState<Runner | null>(null);
+  const [open, setOpen] = useState(false);
+  const [runnerStatus, setStatus] = useState('active');
   
   useEffect(() => {
     fetch('http://localhost:8080/aid_stations')
@@ -46,12 +55,32 @@ const VolunteerCheckIn = () => {
     setCheckIn(result.data.displayRunner);
   };
 
+  const handleClickOpen = async () => {
+    setOpen(true);
+  }
+  
+  const handleClose = async () => {
+    setOpen(false);
+  }
+
   const handleChange = (e : React.ChangeEvent<HTMLInputElement>) =>{ 
     setBibNumber(e.target.value);
   };
 
   const handleAidStationChange = (e : React.ChangeEvent<HTMLSelectElement>) =>{
     setSelectedAidStation(e.target.value);
+  }
+
+  const confirmDNF = async () => {
+    const result = await axios.patch('http://localhost:8080/runners/status', {
+      status: runnerStatus,
+      bib_number: parseInt(bibNumber)
+    });
+
+    setStatus('dnf');
+    console.log(`Runner Status : ${runnerStatus}`);
+    setOpen(false);
+  
   }
 
   return (
@@ -73,8 +102,29 @@ const VolunteerCheckIn = () => {
         <p style={{color: "#1B2D1F", fontFamily: "monospace", fontWeight: "bold"}}>Bib Number</p>
         <input name="bibNumber" type="text" inputMode="numeric" value={bibNumber} onChange= {handleChange} />
       </div>
+      <div className='DNFBtn'>
+        <button variant='outlined' onClick={handleClickOpen}>
+          Mark DNF
+        </button>
+      </div>
+      
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='alert-dialog-title'
+        role='alertdialog'
+      >
+        <DialogTitle id='alert-dialog-title'>
+          {`Mark runner #${bibNumber} as DNF?`}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>Cancel</Button>
+          <Button onClick={confirmDNF}>Confirm</Button>
+        </DialogActions>
+      </Dialog>
+
       <div className="submitBtn">
-        <button onClick={handleClick}>Submit</button>
+        <button onClick={handleClick}>Check-In</button>
       </div>
       <div className="lastCheckedIn">
         {lastCheckIn && (

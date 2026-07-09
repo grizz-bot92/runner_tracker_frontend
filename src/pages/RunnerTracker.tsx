@@ -12,6 +12,8 @@ import Rating from '@mui/material/Rating';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Typography from '@mui/material/Typography';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import "./runnerTracker.css";
 
 type Runner = {
@@ -20,6 +22,7 @@ type Runner = {
   mile_marker: number;
   aid_station: string;
   checked_in_at: string;
+  status: string;
 }
 
 const startTime = new Date('2026-08-15T05:00:00');
@@ -29,10 +32,12 @@ const RunnerTracker = () => {
   const [inputText, setInputText] = useState("");
   const [time, setTime] = useState(0);
   const [value, setValue] = useState('1');
+  const [dnfList, setDNF] = useState('');
   const [watchList, setWatchList] = useState<number[]>(() => {
     const localData = localStorage.getItem('Watchlist');
     return localData ? JSON.parse(localData) : [];
   });
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -61,10 +66,12 @@ const RunnerTracker = () => {
     return (number < 10 ? "0" : "") + number;
   }
 
+  const statusOrder = {active: 0, dnf: 1, dns: 2};
+
   useEffect(() => {
     fetch('http://localhost:8080/runners/search/leaderboard')
     .then(response => response.json())
-    .then(data => setRunner(data.runner));
+    .then(data => setRunner(data.runner.sort((a, b) => statusOrder[a.status] - statusOrder[b.status])));
   }, []);
 
   function fetchLeaderBoard(){
@@ -171,7 +178,6 @@ const RunnerTracker = () => {
               <TabList onChange={handleChange}>
                 <Tab label='Leaderboard' value='1'/>
                 <Tab label='Watchlist' value='2'/>
-                <Tab label='DNF/DNS' value='3'/>
               </TabList>
         </Box>
       
@@ -179,7 +185,7 @@ const RunnerTracker = () => {
         {inputText === '' ? (
           <div className="leaderboard">
             {runner.map((r) => (
-              <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
+              <div className={r.status === 'dnf' ?  'runner-card-dnf' : 'runner-card'} key={`${r.bib_number}-${r.checked_in_at}`}>    
                 <div className='favorited-runner'>
                   <Box sx={{ '& > legend': {mt: 2}}}>
                     <Typography component='legend'></Typography>
@@ -194,8 +200,9 @@ const RunnerTracker = () => {
                 <div className="runner-card-top">
                   <span className="bib">#{r.bib_number}</span>
                   <span className="runner-name">{r.runner_name}</span>
+                  {r.status === 'dnf' && <span className='dnfStatus' >DNF </span>}
                   <span className="checkin-info">
-                    {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
+                    · {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
                   </span>
                 </div>
                 <div className="progress-track">
@@ -305,11 +312,6 @@ const RunnerTracker = () => {
           )}
           </div>
         </TabPanel>
-
-        <TabPanel value='3'>
-          <p>DNF/DNS coming soon</p>
-        </TabPanel>
-
         </TabContext>
         </Box>
       </div>
