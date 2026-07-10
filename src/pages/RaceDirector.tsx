@@ -57,32 +57,32 @@ const RaceDirector = () => {
 
   
   useEffect(() => {
-    fetch('http://localhost:8080/races')
+    fetch(`${import.meta.env.VITE_API_URL}/races`)
     .then(response => response.json())
     .then(data => setRace(data.race.sort((a: Race, b: Race) => parseFloat(a.distance) - parseFloat(b.distance))));
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:8080/runners')
+    fetch(`${import.meta.env.VITE_API_URL}/runners`)
     .then(response => response.json())
     .then(data => setRunner(data.runner.sort((a: Runner, b: Runner) => a.bib_number - b.bib_number)));
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:8080/aid_stations')
+    fetch(`${import.meta.env.VITE_API_URL}/aid_stations`)
     .then(response => response.json())
     .then(data => setAidStation(data.aid_station.sort((a: AidStation, b: AidStation) => parseFloat(a.mile_marker) - parseFloat(b.mile_marker))))
   }, []);
 
   const addRace = async() => {
-    await axios.post('http://localhost:8080/races', {
+    await axios.post(`${import.meta.env.VITE_API_URL}/races`, {
       name: raceName,
       date: new Date(raceDate),
       distance: parseFloat(raceDistance),
       cutoff_time: raceCutoff
     });
 
-    const response = await fetch('http://localhost:8080/races')
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/races`)
     const data = await response.json();
 
     setRace(data.race.sort((a:Race, b: Race ) => parseFloat(a.distance) - parseFloat(b.distance)));
@@ -90,7 +90,7 @@ const RaceDirector = () => {
 
   const deleteRace = async(id : number) => {
     try{
-      await axios.delete(`http://localhost:8080/races/${id}`)
+      await axios.delete(`${import.meta.env.VITE_API_URL}/races/${id}`)
       setRace(race.filter((r) => r.id != id));
     } catch(e){
       console.error(`Race not deleted ${e}`)
@@ -98,19 +98,19 @@ const RaceDirector = () => {
   }
 
   const addRunner = async () => {
-    await axios.post('http://localhost:8080/runners', {
+    await axios.post(`${import.meta.env.VITE_API_URL}/runners`, {
       name: runnerName,
       bib_number: parseInt(bibNumber),
     });
 
-    const response = await fetch('http://localhost:8080/runners')
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/runners`)
     const data = await response.json();
     setRunner(data.runner.sort((a: Runner, b: Runner) => a.bib_number - b.bib_number));
   }
 
   const deleteRunner = async (id: number) => {
     try{
-      await axios.delete(`http://localhost:8080/runners/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/runners/${id}`);
       setRunner(runner.filter((r) => r.id !== id));
     } catch(e){
       console.error(`Runner cant be deleted after check-in ${e}`)
@@ -119,20 +119,20 @@ const RaceDirector = () => {
 
   const addAidStation = async () => {
     console.log('Add aid Station called')
-    await axios.post('http://localhost:8080/aid_stations', {
+    await axios.post(`${import.meta.env.VITE_API_URL}/aid_stations`, {
       name: aidStationName,
       mile_marker: mileMarker,
       crew_access: crewAccess,
     });
 
-    const response = await fetch('http://localhost:8080/aid_stations');
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/aid_stations`);
     const data = await response.json();
     setAidStation(data.aid_station.sort((a: AidStation, b: AidStation) => parseFloat(a.mile_marker) - parseFloat(b.mile_marker)));
   }
 
   const deleteAidStation = async (id : number) => {
     try {
-      await axios.delete(`http://localhost:8080/aid_stations/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/aid_stations/${id}`);
       setAidStation(aidStation.filter((a) => a.id != id));
     } catch(e){
       console.error(`Aid Station not deleted ${e}`)
@@ -175,10 +175,7 @@ const RaceDirector = () => {
     setMileMarker(e.target.value);
   }
 
-  const handleAidCutoff = (e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setAidCutoff(e.target.value);
-  }
-
+  
   const handleCrewAccess = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCrewAccess(e.target.checked);
   }

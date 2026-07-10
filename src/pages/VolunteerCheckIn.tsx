@@ -29,7 +29,7 @@ const VolunteerCheckIn = () => {
   const [runnerStatus, setStatus] = useState('active');
   
   useEffect(() => {
-    fetch('http://localhost:8080/aid_stations')
+    fetch(`${import.meta.env.VITE_API_URL}/aid_stations`)
     .then(response => response.json())
     .then(data => {
       setAidStations(data.aid_station)
@@ -42,7 +42,7 @@ const VolunteerCheckIn = () => {
   const handleClick = async () => {
     const isoTime = new Date().toISOString();
     console.log("SENDING:", isoTime);
-    const result = await axios.post('http://localhost:8080/check_in', {
+    const result = await axios.post(`${import.meta.env.VITE_API_URL}/check_in`, {
       bib_number: parseInt(bibNumber),
       aid_station_id: parseInt(selectedAidStation),
       checked_in_at: new Date().toISOString()
@@ -72,7 +72,7 @@ const VolunteerCheckIn = () => {
   }
 
   const confirmDNF = async () => {
-    const result = await axios.patch('http://localhost:8080/runners/status', {
+    const result = await axios.patch(`${import.meta.env.VITE_API_URL}/runners/status`, {
       status: runnerStatus,
       bib_number: parseInt(bibNumber)
     });

@@ -9,11 +9,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Typography from '@mui/material/Typography';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
 import "./runnerTracker.css";
 
 type Runner = {
@@ -26,15 +22,15 @@ type Runner = {
 }
 
 const startTime = new Date('2026-08-15T05:00:00');
+const statusOrder: {[key: string]: number} = {active: 0, dnf: 1, dns: 2};
 
 const RunnerTracker = () => {
   const [runner, setRunner] = useState<Runner[]>([]);
   const [inputText, setInputText] = useState("");
   const [time, setTime] = useState(0);
   const [value, setValue] = useState('1');
-  const [dnfList, setDNF] = useState('');
   const [watchList, setWatchList] = useState<number[]>(() => {
-    const localData = localStorage.getItem('Watchlist');
+    const localData = localStorage.getItem('watchlist');
     return localData ? JSON.parse(localData) : [];
   });
 
@@ -66,16 +62,14 @@ const RunnerTracker = () => {
     return (number < 10 ? "0" : "") + number;
   }
 
-  const statusOrder = {active: 0, dnf: 1, dns: 2};
-
   useEffect(() => {
-    fetch('http://localhost:8080/runners/search/leaderboard')
+    fetch(`${import.meta.env.VITE_API_URL}/runners/search/leaderboard`)
     .then(response => response.json())
-    .then(data => setRunner(data.runner.sort((a, b) => statusOrder[a.status] - statusOrder[b.status])));
+    .then(data => setRunner(data.runner.sort((a: Runner, b: Runner) => statusOrder[a.status] - statusOrder[b.status])));
   }, []);
 
   function fetchLeaderBoard(){
-    return fetch('http://localhost:8080/runners/search/leaderboard')
+    return fetch(`${import.meta.env.VITE_API_URL}/runners/search/leaderboard`)
     .then(response => response.json())
     .then(data => setRunner(data.runner))
   }
@@ -92,7 +86,7 @@ const RunnerTracker = () => {
   const handleSearch = async() => {
     setRunner([]);
     const isBib = !isNaN(Number(inputText));
-    const response = await axios.get('http://localhost:8080/runners/search', {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/runners/search`, {
       params: isBib 
       ? { bib_number: inputText }
       : { name: inputText }
@@ -200,28 +194,7 @@ const RunnerTracker = () => {
                 <div className="runner-card-top">
                   <span className="bib">#{r.bib_number}</span>
                   <span className="runner-name">{r.runner_name}</span>
-                  {r.status === 'dnf' && <span className='dnfStatus' >DNF </span>}
-                  <span className="checkin-info">
-                    · {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
-                  </span>
-                </div>
-                <div className="progress-track">
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${((r.mile_marker ?? 0) / 62) * 100}%` }}
-                  />
-                </div>
-                <div className="progress-labels">
-                  <span>mi {r.mile_marker ?? 0}</span>
-                  <span>62.0</span>
-                </div>
-              </div>
-            ))}
-            {runner.map((r) => (
-              <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
-                <div className="runner-card-top">
-                  <span className="bib">#{r.bib_number}</span>
-                  <span className="runner-name">{r.runner_name}</span>
+                  {r.status === 'dnf' && <span className='dnfStatus'>DNF ·</span>}
                   <span className="checkin-info">
                     {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
                   </span>
@@ -287,12 +260,13 @@ const RunnerTracker = () => {
         )}
         </TabPanel>
         <TabPanel value='2'>
-          <div> 
+          <div className="leaderboard"> 
             {watchedRunners.map((r) => (
-              <div className="runner-card" key={`${r.bib_number}-${r.checked_in_at}`}>
+              <div className={r.status === 'dnf' ? 'runner-card-dnf' : 'runner-card'} key={`${r.bib_number}-${r.checked_in_at}`}>
                 <div className="runner-card-top">
                   <span className="bib">#{r.bib_number}</span>
                   <span className="runner-name">{r.runner_name}</span>
+                  {r.status ==='dnf' && <span className='dnfStatus'>DNF</span>}
                   <span className="checkin-info">
                     {new Date(r.checked_in_at).toLocaleTimeString("en-US")} · {r.aid_station ?? "Start/Finish"}
                   </span>
