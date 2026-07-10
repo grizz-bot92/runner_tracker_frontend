@@ -1,6 +1,5 @@
-import React, { useEffect, useState, type ReactEventHandler } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -10,7 +9,6 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import { FiAlertOctagon, FiEdit } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { RiGroupLine } from "react-icons/ri";
 import "./raceDirector.css";
@@ -139,7 +137,7 @@ const RaceDirector = () => {
     }
   }
 
-  const handleChange = (event: React.SyntheticEvent, newValue : string) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue : string) => {
     setValue(newValue);
   };
   
@@ -175,7 +173,7 @@ const RaceDirector = () => {
     setMileMarker(e.target.value);
   }
 
-  
+
   const handleCrewAccess = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCrewAccess(e.target.checked);
   }

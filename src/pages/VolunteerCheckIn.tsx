@@ -4,8 +4,6 @@ import "./volunteerCheckIn.css";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 type AidStation = {
@@ -72,7 +70,7 @@ const VolunteerCheckIn = () => {
   }
 
   const confirmDNF = async () => {
-    const result = await axios.patch(`${import.meta.env.VITE_API_URL}/runners/status`, {
+    await axios.patch(`${import.meta.env.VITE_API_URL}/runners/status`, {
       status: runnerStatus,
       bib_number: parseInt(bibNumber)
     });
@@ -103,7 +101,7 @@ const VolunteerCheckIn = () => {
         <input name="bibNumber" type="text" inputMode="numeric" value={bibNumber} onChange= {handleChange} />
       </div>
       <div className='DNFBtn'>
-        <button variant='outlined' onClick={handleClickOpen}>
+        <button onClick={handleClickOpen}>
           Mark DNF
         </button>
       </div>

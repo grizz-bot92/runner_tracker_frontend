@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TextField from "@mui/material/TextField";
-import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -95,7 +94,7 @@ const RunnerTracker = () => {
     setRunner(response.data.runner);
   }
 
-  const handleChange = (event: React.SyntheticEvent, newValue : string) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue : string) => {
     setValue(newValue);
   }
 
