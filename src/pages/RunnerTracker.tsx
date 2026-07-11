@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import { socket } from '../socket';
 import "./runnerTracker.css";
 
 type Runner = {
@@ -67,11 +68,22 @@ const RunnerTracker = () => {
     .then(data => setRunner(data.runner.sort((a: Runner, b: Runner) => statusOrder[a.status] - statusOrder[b.status])));
   }, []);
 
-  function fetchLeaderBoard(){
+  async function fetchLeaderBoard(){
     return fetch(`${import.meta.env.VITE_API_URL}/runners/search/leaderboard`)
-    .then(response => response.json())
-    .then(data => setRunner(data.runner))
+      .then(response => response.json())
+      .then(data => setRunner(data.runner));
   }
+
+  useEffect(() => {
+    socket.connect();
+    socket.on('checkin', fetchLeaderBoard);
+
+    return() => {
+      socket.off('checkin', fetchLeaderBoard);
+      socket.disconnect();
+    }
+
+  },[])
 
   const inputHandler = (e : React.ChangeEvent<HTMLInputElement>)  => {
     const value = e.target.value;
