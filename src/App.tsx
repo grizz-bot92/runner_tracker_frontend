@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import VolunteerCheckIn from "./pages/VolunteerCheckIn";
 import RaceDirector from "./pages/RaceDirector";
 import RunnerTracker from "./pages/RunnerTracker";
+import Login from "./pages/Login";
 
 
 const App = () => {
@@ -12,6 +13,7 @@ const App = () => {
         <Route path="/check_in" element={<VolunteerCheckIn/>}/>
         <Route path="/race_director" element={<RaceDirector/>}/>
         <Route path="/runner_tracker" element={<RunnerTracker/>}/>
+        <Route path="/login" element={<Login/>}/>
       </Routes>
     </BrowserRouter>
   )
