@@ -82,60 +82,62 @@ const VolunteerCheckIn = () => {
   }
 
   return (
-    <div className="checkin-container">
-      <div className="Header">
-        <h1 style={{color: "#C9A876", fontFamily: "monospace"}}>Volunteer Check-In</h1>
-      </div>
-      <div className="aid-station">
-        <p style={{color: "#1B2D1F", fontFamily: "monospace", fontWeight: "bold"}}>Aid Station</p>
-        <select onChange={handleAidStationChange} value={selectedAidStation}>
-          {aidStations.map(station => (
-            <option key={station.id} value={station.id}>
-              {station.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="bib-number">
-        <p style={{color: "#1B2D1F", fontFamily: "monospace", fontWeight: "bold"}}>Bib Number</p>
-        <input name="bibNumber" type="text" inputMode="numeric" value={bibNumber} onChange= {handleChange} />
-      </div>
-      <div className='DNFBtn'>
-        <button onClick={handleClickOpen}>
-          Mark DNF
-        </button>
-      </div>
-      
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='alert-dialog-title'
-        role='alertdialog'
-      >
-        <DialogTitle id='alert-dialog-title'>
-          {`Mark runner #${bibNumber} as DNF?`}
-        </DialogTitle>
-        <DialogActions>
-          <Button onClick={handleClose} autoFocus>Cancel</Button>
-          <Button onClick={confirmDNF}>Confirm</Button>
-        </DialogActions>
-      </Dialog>
+    <>
+      <div className="checkin-container">
+        <div className="Header">
+          <h1 style={{color: "#C9A876", fontFamily: "monospace"}}>Volunteer Check-In</h1>
+        </div>
+        <div className="aid-station">
+          <p style={{color: "#1B2D1F", fontFamily: "monospace", fontWeight: "bold"}}>Aid Station</p>
+          <select onChange={handleAidStationChange} value={selectedAidStation}>
+            {aidStations.map(station => (
+              <option key={station.id} value={station.id}>
+                {station.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="bib-number">
+          <p style={{color: "#1B2D1F", fontFamily: "monospace", fontWeight: "bold"}}>Bib Number</p>
+          <input name="bibNumber" type="text" inputMode="numeric" value={bibNumber} onChange= {handleChange} />
+        </div>
+        <div className='DNFBtn'>
+          <button onClick={handleClickOpen}>
+            Mark DNF
+          </button>
+        </div>
+        
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby='alert-dialog-title'
+          role='alertdialog'
+        >
+          <DialogTitle id='alert-dialog-title'>
+            {`Mark runner #${bibNumber} as DNF?`}
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={handleClose} autoFocus>Cancel</Button>
+            <Button onClick={confirmDNF}>Confirm</Button>
+          </DialogActions>
+        </Dialog>
 
-      <div className="submitBtn">
-        <button onClick={handleClick}>Check-In</button>
+        <div className="submitBtn">
+          <button onClick={handleClick}>Check-In</button>
+        </div>
       </div>
       <div className="lastCheckedIn">
-        {lastCheckIn && (
-          <div className="checkin-card">
-            <p className="checkin-label">Last checked in</p>
-            <p className="checkin-detail">
-              {lastCheckIn.runner_name} · {lastCheckIn.aid_station_name} · {" "} 
-              {new Date(lastCheckIn.checked_in_at).toLocaleTimeString("en-US", {hour: "2-digit", minute: "2-digit"})}
-            </p>
-          </div>
-        )}
-        </div>
-    </div>
+          {lastCheckIn && (
+            <div className="checkin-card">
+              <p className="checkin-label">Last checked in</p>
+              <p className="checkin-detail">
+                {lastCheckIn.runner_name} · {lastCheckIn.aid_station_name} · {" "} 
+                {new Date(lastCheckIn.checked_in_at).toLocaleTimeString("en-US", {hour: "2-digit", minute: "2-digit"})}
+              </p>
+            </div>
+          )}
+      </div>
+    </>
   )
 }
 
