@@ -9,6 +9,8 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
 import { socket } from '../socket';
 import "./runnerTracker.css";
 
@@ -26,6 +28,7 @@ const statusOrder: {[key: string]: number} = {active: 0, dnf: 1, dns: 2};
 
 const RunnerTracker = () => {
   const [runner, setRunner] = useState<Runner[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [inputText, setInputText] = useState("");
   const [time, setTime] = useState(0);
   const [value, setValue] = useState('1');
@@ -65,7 +68,10 @@ const RunnerTracker = () => {
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/runners/search/leaderboard`)
     .then(response => response.json())
-    .then(data => setRunner(data.runner.sort((a: Runner, b: Runner) => statusOrder[a.status] - statusOrder[b.status])));
+    .then(data => {
+      setRunner(data.runner.sort((a: Runner, b: Runner) => statusOrder[a.status] - statusOrder[b.status]));
+      setIsLoading(false);
+    })
   }, []);
 
   async function fetchLeaderBoard(){
@@ -187,6 +193,13 @@ const RunnerTracker = () => {
         </Box>
       
       <TabPanel value='1'>
+        <div>
+          {isLoading ? (
+            <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
+              <CircularProgress sx={{ color: '#B5502E' }} aria-label="Loading..." />
+            </Stack>
+          ) : null}
+        </div>
         {inputText === '' ? (
           <div className="leaderboard">
             {runner.map((r) => (
@@ -301,7 +314,7 @@ const RunnerTracker = () => {
         </Box>
       </div>
     </div>
-  )}
-
+  )
+}
 
 export default RunnerTracker;

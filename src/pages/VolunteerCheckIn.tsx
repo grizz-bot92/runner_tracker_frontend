@@ -21,6 +21,7 @@ type Runner = {
 
 const VolunteerCheckIn = () => {
   const [bibNumber, setBibNumber] = useState("");
+  const [error, setError] = useState('');
   const [aidStations, setAidStations] = useState<AidStation[]>([]);
   const [selectedAidStation, setSelectedAidStation] = useState('');
   const [lastCheckIn, setCheckIn] = useState<Runner | null>(null);
@@ -42,7 +43,8 @@ const VolunteerCheckIn = () => {
     const isoTime = new Date().toISOString();
     const token = localStorage.getItem('token');
     console.log("SENDING:", isoTime);
-    const result = await axios.post(`${import.meta.env.VITE_API_URL}/check_in`, {
+    try{
+      const result = await axios.post(`${import.meta.env.VITE_API_URL}/check_in`, {
       bib_number: parseInt(bibNumber),
       aid_station_id: parseInt(selectedAidStation),
       checked_in_at: new Date().toISOString()
@@ -57,6 +59,13 @@ const VolunteerCheckIn = () => {
     setBibNumber("");
     console.log("Successful entry")
     setCheckIn(result.data.displayRunner);
+    setError('');
+  
+    } catch(e) {
+        console.error(e)
+        setError('Runner not found - check bib number');
+    }
+    
   };
 
   const handleClickOpen = async () => {
@@ -110,6 +119,7 @@ const VolunteerCheckIn = () => {
         </div>
         <div className="bib-number">
           <p style={{color: "#1B2D1F", fontFamily: "monospace", fontWeight: "bold"}}>Bib Number</p>
+          {error && <p style={{ color: '#B5502E', fontFamily: 'monospace', padding: '0 1.5rem' }}>{error}</p>}
           <input name="bibNumber" type="text" inputMode="numeric" value={bibNumber} onChange= {handleChange} />
         </div>
         <div className='DNFBtn'>

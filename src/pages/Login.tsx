@@ -51,7 +51,7 @@ const Login = () => {
     <div>
       <div className="header-login">
         <p className="race-label">Sign in</p> 
-        <h2 className="header-title">Olympic Mountain 110k</h2>   
+        <h2 className="header-title">Olympic Mountain 100k</h2>   
       </div>
 
       <div className="sign-in-container">
