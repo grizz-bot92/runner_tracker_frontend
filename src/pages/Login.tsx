@@ -1,15 +1,51 @@
-import { useEffect, useState } from "react";
+import React, {  useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {jwtDecode} from 'jwt-decode';
 import "./login.css";
+import axios from "axios";
+
+interface User {
+  id: number;
+  username: string;
+  password: string;
+  role: string;
+  token: string;
+}
+
 
 const Login = () => {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
+  
+  const login = async() => {
+    try{
+      const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/login`, {
+      username,
+      password,
+    });
+      const token = response.data.token;
+      const decoded = jwtDecode<User>(token);
+      
+      if(decoded.role === 'admin') {
+        navigate('/race_director')
+       } else {
+        navigate('/check_in')
+       };
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+      localStorage.setItem('token', token);
+      
+    } catch (e) {
+      console.error(`wrong credentials ${e}`)
+    }
+    
   }
 
+  const handleLogin = (e : React.FormEvent) => {
+    e.preventDefault();
+    login();
+  }
 
   return (
     <div>
@@ -34,16 +70,16 @@ const Login = () => {
             <p style={{color: "#1B2D1F", fontFamily: "monospace", fontWeight: "bold"}}>
               Password
               <input 
-                type="text"
+                type="password"
                 value={password}
                 onChange={({ target }) => setPassword(target.value)}
               />
             </p>
           </div>
+          <div className="submitBtn">
+            <button style={{fontWeight: 'bold'}} type="submit">Sign in</button>
+          </div>
         </form>
-        <div className="submitBtn">
-          <button style={{fontWeight: 'bold'}} type="submit">Sign in</button>
-        </div>
         <div className="footer">
           <p>Race Tracker · Volunteer Access</p>
         </div>
