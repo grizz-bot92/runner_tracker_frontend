@@ -39,6 +39,7 @@ type AidStation = {
   crew_access: boolean;
 }
 
+
 const RaceDirector = () => {
   const [race, setRace] = useState<Race[]>([]);
   const [runner, setRunner] = useState<Runner[]>([]);
@@ -74,11 +75,16 @@ const RaceDirector = () => {
   }, []);
 
   const addRace = async() => {
+    const token = localStorage.getItem('token');
     await axios.post(`${import.meta.env.VITE_API_URL}/races`, {
       name: raceName,
       date: new Date(raceDate),
       distance: parseFloat(raceDistance),
       cutoff_time: raceCutoff
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/races`)
@@ -88,8 +94,13 @@ const RaceDirector = () => {
   }
 
   const deleteRace = async(id : number) => {
+    const token = localStorage.getItem('token');
     try{
-      await axios.delete(`${import.meta.env.VITE_API_URL}/races/${id}`)
+      await axios.delete(`${import.meta.env.VITE_API_URL}/races/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       setRace(race.filter((r) => r.id != id));
     } catch(e){
       console.error(`Race not deleted ${e}`)
@@ -97,9 +108,14 @@ const RaceDirector = () => {
   }
 
   const addRunner = async () => {
+    const token = localStorage.getItem('token');
     await axios.post(`${import.meta.env.VITE_API_URL}/runners`, {
       name: runnerName,
       bib_number: parseInt(bibNumber),
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/runners`)
@@ -108,8 +124,13 @@ const RaceDirector = () => {
   }
 
   const deleteRunner = async (id: number) => {
+    const token  = localStorage.getItem('token')
     try{
-      await axios.delete(`${import.meta.env.VITE_API_URL}/runners/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/runners/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setRunner(runner.filter((r) => r.id !== id));
     } catch(e){
       console.error(`Runner cant be deleted after check-in ${e}`)
@@ -117,11 +138,16 @@ const RaceDirector = () => {
   }
 
   const addAidStation = async () => {
+    const token = localStorage.getItem('token');
     console.log('Add aid Station called')
     await axios.post(`${import.meta.env.VITE_API_URL}/aid_stations`, {
       name: aidStationName,
       mile_marker: mileMarker,
       crew_access: crewAccess,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/aid_stations`);
@@ -130,8 +156,13 @@ const RaceDirector = () => {
   }
 
   const deleteAidStation = async (id : number) => {
+    const token = localStorage.getItem('token');
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/aid_stations/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/aid_stations/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setAidStation(aidStation.filter((a) => a.id != id));
     } catch(e){
       console.error(`Aid Station not deleted ${e}`)

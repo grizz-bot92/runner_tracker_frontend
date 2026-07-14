@@ -18,6 +18,7 @@ type Runner = {
   status: string; 
 }
 
+
 const VolunteerCheckIn = () => {
   const [bibNumber, setBibNumber] = useState("");
   const [aidStations, setAidStations] = useState<AidStation[]>([]);
@@ -39,11 +40,16 @@ const VolunteerCheckIn = () => {
 
   const handleClick = async () => {
     const isoTime = new Date().toISOString();
+    const token = localStorage.getItem('token');
     console.log("SENDING:", isoTime);
     const result = await axios.post(`${import.meta.env.VITE_API_URL}/check_in`, {
       bib_number: parseInt(bibNumber),
       aid_station_id: parseInt(selectedAidStation),
       checked_in_at: new Date().toISOString()
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     console.log("RECEIVED:", result.data.displayRunner.checked_in_at);
@@ -70,9 +76,14 @@ const VolunteerCheckIn = () => {
   }
 
   const confirmDNF = async () => {
+    const token = localStorage.getItem('token');
     await axios.patch(`${import.meta.env.VITE_API_URL}/runners/status`, {
       status: runnerStatus,
       bib_number: parseInt(bibNumber)
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     setStatus('dnf');
