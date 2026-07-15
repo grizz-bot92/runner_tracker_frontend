@@ -26,8 +26,7 @@ const VolunteerCheckIn = () => {
   const [selectedAidStation, setSelectedAidStation] = useState('');
   const [lastCheckIn, setCheckIn] = useState<Runner | null>(null);
   const [open, setOpen] = useState(false);
-  const [runnerStatus, setStatus] = useState('active');
-  
+
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/aid_stations`)
     .then(response => response.json())
@@ -87,7 +86,7 @@ const VolunteerCheckIn = () => {
   const confirmDNF = async () => {
     const token = localStorage.getItem('token');
     await axios.patch(`${import.meta.env.VITE_API_URL}/runners/status`, {
-      status: runnerStatus,
+      status: 'dnf',
       bib_number: parseInt(bibNumber)
     }, {
       headers: {
@@ -95,8 +94,8 @@ const VolunteerCheckIn = () => {
       }
     });
 
-    setStatus('dnf');
-    console.log(`Runner Status : ${runnerStatus}`);
+    // setStatus('dnf');
+    // console.log(`Runner Status : ${runnerStatus}`);
     setOpen(false);
   }
 
