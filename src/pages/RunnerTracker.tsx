@@ -77,7 +77,7 @@ const RunnerTracker = () => {
   async function fetchLeaderBoard(){
     return fetch(`${import.meta.env.VITE_API_URL}/runners/search/leaderboard`)
       .then(response => response.json())
-      .then(data => setRunner(data.runner));
+      .then(data => setRunner(data.runner.sort((a: Runner, b:Runner) => statusOrder[a.status] - statusOrder[b.status])));
   }
 
   useEffect(() => {
