@@ -98,7 +98,6 @@ const VolunteerCheckIn = () => {
     setStatus('dnf');
     console.log(`Runner Status : ${runnerStatus}`);
     setOpen(false);
-  
   }
 
   return (

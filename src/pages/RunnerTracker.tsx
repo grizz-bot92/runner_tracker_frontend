@@ -83,9 +83,11 @@ const RunnerTracker = () => {
   useEffect(() => {
     socket.connect();
     socket.on('checkin', fetchLeaderBoard);
+    socket.on('status', fetchLeaderBoard);
 
     return() => {
       socket.off('checkin', fetchLeaderBoard);
+      socket.off('status', fetchLeaderBoard);
       socket.disconnect();
     }
 
