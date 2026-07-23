@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { axiosInstance } from '../axiosInstance';
 import "./volunteerCheckIn.css";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -43,20 +44,16 @@ const VolunteerCheckIn = () => {
     const token = localStorage.getItem('token');
     console.log("SENDING:", isoTime);
     try{
-      const result = await axios.post(`${import.meta.env.VITE_API_URL}/check_in`, {
+      const result = await axiosInstance.post(`${import.meta.env.VITE_API_URL}/check_in`, {
       bib_number: parseInt(bibNumber),
       aid_station_id: parseInt(selectedAidStation),
       checked_in_at: new Date().toISOString()
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    }
+  })
 
     console.log("RECEIVED:", result.data.displayRunner.checked_in_at);
 
     setBibNumber("");
-    console.log("Successful entry")
     setCheckIn(result.data.displayRunner);
     setError('');
   
@@ -85,17 +82,12 @@ const VolunteerCheckIn = () => {
 
   const confirmDNF = async () => {
     const token = localStorage.getItem('token');
-    await axios.patch(`${import.meta.env.VITE_API_URL}/runners/status`, {
+    await axiosInstance.patch(`${import.meta.env.VITE_API_URL}/runners/status`, {
       status: 'dnf',
       bib_number: parseInt(bibNumber)
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    }
+  });
 
-    // setStatus('dnf');
-    // console.log(`Runner Status : ${runnerStatus}`);
     setOpen(false);
   }
 

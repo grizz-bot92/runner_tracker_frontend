@@ -69,7 +69,7 @@ const RunnerTracker = () => {
     fetch(`${import.meta.env.VITE_API_URL}/runners/search/leaderboard`)
     .then(response => response.json())
     .then(data => {
-      setRunner(data.runner.sort((a: Runner, b: Runner) => statusOrder[a.status] - statusOrder[b.status]));
+      setRunner(data.runner.sort((a: Runner, b: Runner) => (statusOrder[a.status] ?? 0) - (statusOrder[b.status] ?? 0)));
       setIsLoading(false);
     })
   }, []);
@@ -79,7 +79,7 @@ const RunnerTracker = () => {
       .then(response => response.json())
       .then(data => {
         console.log('LEADERBOARD DATA:', data.runner);
-        setRunner(data.runner.sort((a: Runner, b:Runner) => statusOrder[a.status] - statusOrder[b.status]))
+        setRunner(data.runner.sort((a: Runner, b:Runner) => (statusOrder[a.status] ?? 0) - (statusOrder[b.status] ?? 0)))
     });
   
   }

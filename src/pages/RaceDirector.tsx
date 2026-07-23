@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { axiosInstance } from '../axiosInstance';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -76,14 +76,11 @@ const RaceDirector = () => {
 
   const addRace = async() => {
     const token = localStorage.getItem('token');
-    await axios.post(`${import.meta.env.VITE_API_URL}/races`, {
+    await axiosInstance.post(`${import.meta.env.VITE_API_URL}/races`, {
       name: raceName,
       date: new Date(raceDate),
       distance: parseFloat(raceDistance),
       cutoff_time: raceCutoff
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`
       }
     });
 
@@ -109,14 +106,11 @@ const RaceDirector = () => {
 
   const addRunner = async () => {
     const token = localStorage.getItem('token');
-    await axios.post(`${import.meta.env.VITE_API_URL}/runners`, {
+    await axiosInstance.post(`${import.meta.env.VITE_API_URL}/runners`, {
       name: runnerName,
       bib_number: parseInt(bibNumber),
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    }
+  });
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/runners`)
     const data = await response.json();
@@ -140,15 +134,12 @@ const RaceDirector = () => {
   const addAidStation = async () => {
     const token = localStorage.getItem('token');
     console.log('Add aid Station called')
-    await axios.post(`${import.meta.env.VITE_API_URL}/aid_stations`, {
+    await axiosInstance.post(`${import.meta.env.VITE_API_URL}/aid_stations`, {
       name: aidStationName,
       mile_marker: mileMarker,
       crew_access: crewAccess,
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    }
+  });
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/aid_stations`);
     const data = await response.json();
