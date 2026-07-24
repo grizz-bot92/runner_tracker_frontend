@@ -44,8 +44,8 @@ const VolunteerCheckIn = () => {
       bib_number: parseInt(bibNumber),
       aid_station_id: parseInt(selectedAidStation),
       checked_in_at: new Date().toISOString()
-      },
-    );
+    }
+  );
     
     setBibNumber("");
     setCheckIn(result.data.displayRunner);

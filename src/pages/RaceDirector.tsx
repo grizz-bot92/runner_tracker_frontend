@@ -80,8 +80,8 @@ const RaceDirector = () => {
       name: raceName,
       date: new Date(raceDate),
       distance: parseFloat(raceDistance),
-      cutoff_time: raceCutoff,
-      }
+      cutoff_time: raceCutoff
+    }
   )
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/races`)
@@ -135,7 +135,7 @@ const RaceDirector = () => {
     await axiosInstance.post('/aid_stations', {
       name: aidStationName,
       mile_marker: mileMarker,
-      crew_access: crewAccess,
+      crew_access: crewAccess
     }
   );
 
