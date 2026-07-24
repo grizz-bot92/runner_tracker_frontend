@@ -12,7 +12,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import { RiDeleteBinLine } from "react-icons/ri";
 import { RiGroupLine } from "react-icons/ri";
-import axios from 'axios';
 import "./raceDirector.css";
 
 type Race = {
@@ -81,8 +80,7 @@ const RaceDirector = () => {
       date: new Date(raceDate),
       distance: parseFloat(raceDistance),
       cutoff_time: raceCutoff
-    }
-  )
+    })
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/races`)
     const data = await response.json();
@@ -91,13 +89,8 @@ const RaceDirector = () => {
   }
 
   const deleteRace = async(id : number) => {
-    const token = localStorage.getItem('token');
     try{
-      await axios.delete(`${import.meta.env.VITE_API_URL}/races/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      await axiosInstance.delete('/races/${id}')
       setRace(race.filter((r) => r.id != id));
     } catch(e){
       console.error(`Race not deleted ${e}`)
@@ -108,8 +101,7 @@ const RaceDirector = () => {
     await axiosInstance.post('/runners', {
       name: runnerName,
       bib_number: parseInt(bibNumber),
-    }
-  );
+    });
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/runners`)
     const data = await response.json();
@@ -117,13 +109,8 @@ const RaceDirector = () => {
   }
 
   const deleteRunner = async (id: number) => {
-    const token  = localStorage.getItem('token')
     try{
-      await axios.delete(`${import.meta.env.VITE_API_URL}/runners/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      await axiosInstance.delete('/runners/${id}')
       setRunner(runner.filter((r) => r.id !== id));
     } catch(e){
       console.error(`Runner cant be deleted after check-in ${e}`)
@@ -136,8 +123,7 @@ const RaceDirector = () => {
       name: aidStationName,
       mile_marker: mileMarker,
       crew_access: crewAccess
-    }
-  );
+    });
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/aid_stations`);
     const data = await response.json();
@@ -145,13 +131,8 @@ const RaceDirector = () => {
   }
 
   const deleteAidStation = async (id : number) => {
-    const token = localStorage.getItem('token');
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/aid_stations/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      await axiosInstance.delete('/aid_stations/${id}')
       setAidStation(aidStation.filter((a) => a.id != id));
     } catch(e){
       console.error(`Aid Station not deleted ${e}`)
