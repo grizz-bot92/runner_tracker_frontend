@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { axiosInstance } from '../axiosInstance';
+import axiosInstance from '../axiosInstance';
 import "./volunteerCheckIn.css";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -40,19 +39,14 @@ const VolunteerCheckIn = () => {
   }, []);
 
   const handleClick = async () => {
-    const isoTime = new Date().toISOString();
-    const token = localStorage.getItem('token');
-    console.log("SENDING:", isoTime);
     try{
-      const result = await axiosInstance.post(`${import.meta.env.VITE_API_URL}/check_in`, {
+      const result = await axiosInstance.post('/check_in', {
       bib_number: parseInt(bibNumber),
       aid_station_id: parseInt(selectedAidStation),
       checked_in_at: new Date().toISOString()
-    }
-  })
-
-    console.log("RECEIVED:", result.data.displayRunner.checked_in_at);
-
+      },
+    );
+    
     setBibNumber("");
     setCheckIn(result.data.displayRunner);
     setError('');
@@ -60,8 +54,7 @@ const VolunteerCheckIn = () => {
     } catch(e) {
         console.error(e)
         setError('Runner not found - check bib number');
-    }
-    
+    } 
   };
 
   const handleClickOpen = async () => {
@@ -81,12 +74,10 @@ const VolunteerCheckIn = () => {
   }
 
   const confirmDNF = async () => {
-    const token = localStorage.getItem('token');
-    await axiosInstance.patch(`${import.meta.env.VITE_API_URL}/runners/status`, {
+    await axiosInstance.patch('/check_in', {
       status: 'dnf',
       bib_number: parseInt(bibNumber)
-    }
-  });
+    });
 
     setOpen(false);
   }

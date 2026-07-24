@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { axiosInstance } from '../axiosInstance';
+import axiosInstance from '../axiosInstance';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -12,6 +12,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import { RiDeleteBinLine } from "react-icons/ri";
 import { RiGroupLine } from "react-icons/ri";
+import axios from 'axios';
 import "./raceDirector.css";
 
 type Race = {
@@ -75,14 +76,13 @@ const RaceDirector = () => {
   }, []);
 
   const addRace = async() => {
-    const token = localStorage.getItem('token');
-    await axiosInstance.post(`${import.meta.env.VITE_API_URL}/races`, {
+    await axiosInstance.post('/races', {
       name: raceName,
       date: new Date(raceDate),
       distance: parseFloat(raceDistance),
-      cutoff_time: raceCutoff
+      cutoff_time: raceCutoff,
       }
-    });
+  )
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/races`)
     const data = await response.json();
@@ -105,12 +105,11 @@ const RaceDirector = () => {
   }
 
   const addRunner = async () => {
-    const token = localStorage.getItem('token');
-    await axiosInstance.post(`${import.meta.env.VITE_API_URL}/runners`, {
+    await axiosInstance.post('/runners', {
       name: runnerName,
       bib_number: parseInt(bibNumber),
     }
-  });
+  );
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/runners`)
     const data = await response.json();
@@ -132,14 +131,13 @@ const RaceDirector = () => {
   }
 
   const addAidStation = async () => {
-    const token = localStorage.getItem('token');
     console.log('Add aid Station called')
-    await axiosInstance.post(`${import.meta.env.VITE_API_URL}/aid_stations`, {
+    await axiosInstance.post('/aid_stations', {
       name: aidStationName,
       mile_marker: mileMarker,
       crew_access: crewAccess,
     }
-  });
+  );
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/aid_stations`);
     const data = await response.json();
