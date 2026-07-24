@@ -16,6 +16,7 @@ interface User {
 const Login = () => {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = (null);
 
   const navigate = useNavigate();
   
@@ -36,9 +37,13 @@ const Login = () => {
 
       localStorage.setItem('token', token);
       
-    } catch (e) {
-      console.error(`wrong credentials ${e}`)
+    } catch {
+      setErrorMessage('Wrong credentials');
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000); 
     }
+  }
     
   }
 
