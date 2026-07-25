@@ -16,7 +16,7 @@ interface User {
 const Login = () => {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = (null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const navigate = useNavigate();
   
@@ -43,8 +43,6 @@ const Login = () => {
         setErrorMessage(null);
       }, 5000); 
     }
-  }
-    
   }
 
   const handleLogin = (e : React.FormEvent) => {
@@ -84,6 +82,7 @@ const Login = () => {
           <div className="submitBtn">
             <button style={{fontWeight: 'bold'}} type="submit">Sign in</button>
           </div>
+          {errorMessage && <p style={{ color: '#B5502E', textAlign: 'center', fontSize: '13px'}}>{errorMessage}</p>}
         </form>
         <div className="footer">
           <p>Race Tracker · Volunteer Access</p>
