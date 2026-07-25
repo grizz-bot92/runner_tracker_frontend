@@ -38,7 +38,7 @@ const Login = () => {
         };   
     } catch {
       console.log('catch reached')
-      setErrorMessage('peanut butter');
+      setErrorMessage('peanut butter & jelly');
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000); 
