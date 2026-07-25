@@ -38,10 +38,10 @@ const Login = () => {
         };   
     } catch {
       console.log('catch reached')
-      setErrorMessage('peanut butter & jelly');
+      setErrorMessage('Incorrect login information');
       setTimeout(() => {
         setErrorMessage(null);
-      }, 5000); 
+      }, 10000); 
     }
   }
 
