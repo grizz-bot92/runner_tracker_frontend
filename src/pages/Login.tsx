@@ -28,15 +28,14 @@ const Login = () => {
     });
       const token = response.data.token;
       const decoded = jwtDecode<User>(token);
+
+      localStorage.setItem('token', token);
       
       if(decoded.role === 'admin') {
         navigate('/race_director')
        } else {
         navigate('/check_in')
-       };
-
-      localStorage.setItem('token', token);
-      
+        };   
     } catch {
       setErrorMessage('Wrong credentials');
       setTimeout(() => {
@@ -82,8 +81,8 @@ const Login = () => {
           <div className="submitBtn">
             <button style={{fontWeight: 'bold'}} type="submit">Sign in</button>
           </div>
-          {errorMessage && <p style={{ color: '#B5502E', textAlign: 'center', fontSize: '13px'}}>{errorMessage}</p>}
         </form>
+        {errorMessage && <p style={{ color: '#B5502E', textAlign: 'center', fontSize: '13px'}}>{errorMessage}</p>}
         <div className="footer">
           <p>Race Tracker · Volunteer Access</p>
         </div>
