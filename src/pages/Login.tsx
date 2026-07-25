@@ -37,6 +37,7 @@ const Login = () => {
         navigate('/check_in')
         };   
     } catch {
+      console.log('catch reached')
       setErrorMessage('Wrong credentials');
       setTimeout(() => {
         setErrorMessage(null);
