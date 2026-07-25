@@ -38,7 +38,7 @@ const Login = () => {
         };   
     } catch {
       console.log('catch reached')
-      setErrorMessage('Wrong credentials');
+      setErrorMessage('peanut butter');
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000); 
