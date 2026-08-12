@@ -73,7 +73,7 @@ const VolunteerCheckIn = () => {
   }
 
   const confirmDNF = async () => {
-    await axiosInstance.patch('/check_in', {
+    await axiosInstance.patch('/runners/status', {
       status: 'dnf',
       bib_number: parseInt(bibNumber)
     });
