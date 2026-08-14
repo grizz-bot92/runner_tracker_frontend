@@ -90,7 +90,7 @@ const RaceDirector = () => {
 
   const deleteRace = async(id : number) => {
     try{
-      await axiosInstance.delete('/races/${id}')
+      await axiosInstance.delete(`/races/${id}`)
       setRace(race.filter((r) => r.id != id));
     } catch(e){
       console.error(`Race not deleted ${e}`)
