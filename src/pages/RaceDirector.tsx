@@ -109,14 +109,12 @@ const RaceDirector = () => {
   }
 
   const deleteRunner = async (id: number) => {
-    await axiosInstance.delete(`/runners/${id}`)
-    setRunner(runner.filter((r) => r.id !== id));
-    // try{
-    //   await axiosInstance.delete(`/runners/${id}`)
-    //   setRunner(runner.filter((r) => r.id !== id));
-    // } catch(e){
-    //   console.error(`Runner cant be deleted after check-in ${e}`)
-    // }
+    try{
+      await axiosInstance.delete(`/runners/${id}`)
+      setRunner(runner.filter((r) => r.id !== id));
+    } catch(e){
+      console.error(`Runner cant be deleted after check-in ${e}`)
+    }
   }
 
   const addAidStation = async () => {
@@ -134,7 +132,7 @@ const RaceDirector = () => {
 
   const deleteAidStation = async (id : number) => {
     try {
-      await axiosInstance.delete('/aid_stations/${id}')
+      await axiosInstance.delete(`/aid_stations/${id}`)
       setAidStation(aidStation.filter((a) => a.id != id));
     } catch(e){
       console.error(`Aid Station not deleted ${e}`)
